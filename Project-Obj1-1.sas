@@ -80,10 +80,15 @@ by ProjNum Date;
 run;
 
 data new_master;
-update merge_a correct_n; /*Update merge_a using correct_n by referring to both ProjNum and Date*/
+update merge_a(in = in1) correct_n(in = in2); /*Update merge_a using correct_n by referring to both ProjNum and Date*/
 by ProjNum Date;
+if in2 then Corrections = 'Yes'; /*Add columns for corrrections*/
 run;
 
 proc sort data= new_master;
 by ProjNum Date;
 run;
+
+
+/*End of Objective 1, assuming merge is correct*/
+
