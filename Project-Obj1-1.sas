@@ -9,7 +9,7 @@ data master_n;
 infile master firstobs=2 dsd; /*get rid of the first row in the orginal data */
 retain Consultant ProjNum Date Hours Stage Complete; /*Keep the column order*/
 length Date $10;
-input Consultant $ ProjNum Date Hours Stage Complete;
+input Consultant $ ProjNum Date mmddyy10. Hours Stage Complete;/*Change internal representation  of dates to sort on the basis of dates*/
 run;
 
 /*import NewForm data */
@@ -17,7 +17,7 @@ data newform_n;
 infile newform firstobs=2 dsd;
 retain ProjNum Date Hours Stage Complete;
 length Date $10;
-input ProjNum Date Hours Stage Complete;
+input ProjNum Date mmddyy10. Hours Stage Complete;
 run;
 
 /*import Assignment data */
@@ -30,7 +30,7 @@ run;
 data correct_n;
 infile correct firstobs=2 dsd;
 length Date $10;
-input ProjNum Date $ Hours Stage;
+input ProjNum Date mmddyy10. $ Hours Stage;
 run;
 
 
@@ -92,3 +92,11 @@ run;
 
 /*End of Objective 1, assuming merge is correct*/
 
+/*Objective 2: List of ongoing projects as on 11/4/2010*/
+data ongoing ( keep = ProjNum);
+set new_master;
+by ProjNum Date;
+if complete = 0 and last.ProjNum = 1 then output;
+run;
+
+/*Objective 3: */
